@@ -26,12 +26,13 @@ app.use(limiter);
 
 // Templating engine
 nunjucks.configure('views', { autoescape: true, express: app });
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'));
 
-// Database connection
-mongoose.connect('mongodb+srv://takewadit:Latifa06&@linkshrinker.4niam.mongodb.net/?retryWrites=true&w=majority&appName=LinkShrinker', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+// Database connection - using environment variable
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Models
 const Url = require('./models/Url');
@@ -49,23 +50,23 @@ app.post('/shorten', [
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
+  
   let { url } = req.body;
   if (!url.startsWith('http')) {
     url = `http://${url}`;
   }
-
+  
   const shortCode = shortid.generate();
   const newUrl = new Url({ originalUrl: url, shortCode });
   await newUrl.save();
-
+  
   res.json({ shortUrl: `${req.protocol}://${req.get('host')}/${shortCode}` });
 });
 
 app.get('/:shortCode', async (req, res) => {
   const url = await Url.findOne({ shortCode: req.params.shortCode });
   if (!url) return res.status(404).send('URL not found');
-
+  
   // Log click
   const ip = req.ip;
   const location = geoip.lookup(ip)?.country || 'Unknown';
@@ -76,7 +77,7 @@ app.get('/:shortCode', async (req, res) => {
     location
   });
   await click.save();
-
+  
   res.redirect(url.originalUrl);
 });
 
