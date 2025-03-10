@@ -11,6 +11,9 @@ const path = require('path');
 
 const app = express();
 
+// Trust proxy - IMPORTANT pour Vercel
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
