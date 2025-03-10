@@ -1,91 +1,137 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const shortid = require('shortid');
-const QRCode = require('qrcode');
-const { body, validationResult } = require('express-validator');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const geoip = require('geoip-lite');
-const nunjucks = require('nunjucks');
 const path = require('path');
-
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Trust proxy - IMPORTANT pour Vercel
+// Set trust proxy for rate limiter to work correctly behind Vercel
 app.set('trust proxy', 1);
+
+// Configure rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
+
+// Apply rate limiting to all requests
+app.use(limiter);
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // Limit each IP to 100 requests per windowMs
+// Define URL schema
+const urlSchema = new mongoose.Schema({
+  originalUrl: { type: String, required: true },
+  shortCode: { type: String, required: true, default: shortid.generate },
+  createdAt: { type: Date, default: Date.now },
+  clicks: { type: Number, default: 0 }
 });
-app.use(limiter);
 
-// Templating engine
-nunjucks.configure('views', { autoescape: true, express: app });
-app.set('view engine', 'html');
-app.set('views', path.join(__dirname, 'views'));
+// Create URL model
+const Url = mongoose.model('Url', urlSchema);
 
-// Database connection - using environment variable
+// Connect to MongoDB - Make sure MONGODB_URI is set in Vercel environment variables
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
+  .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
-
-// Models
-const Url = require('./models/Url');
-const Click = require('./models/Click');
 
 // Routes
 app.get('/', (req, res) => {
-  res.render('index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post('/shorten', [
-  body('url').isURL().withMessage('Invalid URL')
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+// Shorten URL endpoint
+app.post('/shorten', async (req, res) => {
+  try {
+    const { url } = req.body;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    
+    // Create a new shortened URL
+    const urlDoc = new Url({
+      originalUrl: url
+    });
+    
+    await urlDoc.save();
+    
+    const shortUrl = `${req.protocol}://${req.get('host')}/${urlDoc.shortCode}`;
+    
+    res.json({ 
+      originalUrl: url,
+      shortUrl: shortUrl,
+      shortCode: urlDoc.shortCode
+    });
+  } catch (error) {
+    console.error('Error shortening URL:', error);
+    res.status(500).json({ error: 'Server error' });
   }
-  
-  let { url } = req.body;
-  if (!url.startsWith('http')) {
-    url = `http://${url}`;
-  }
-  
-  const shortCode = shortid.generate();
-  const newUrl = new Url({ originalUrl: url, shortCode });
-  await newUrl.save();
-  
-  res.json({ shortUrl: `${req.protocol}://${req.get('host')}/${shortCode}` });
 });
 
-app.get('/:shortCode', async (req, res) => {
-  const url = await Url.findOne({ shortCode: req.params.shortCode });
-  if (!url) return res.status(404).send('URL not found');
-  
-  // Log click
-  const ip = req.ip;
-  const location = geoip.lookup(ip)?.country || 'Unknown';
-  const click = new Click({
-    shortCode: req.params.shortCode,
-    userAgent: req.get('User-Agent'),
-    ip,
-    location
-  });
-  await click.save();
-  
-  res.redirect(url.originalUrl);
+// Redirect to original URL
+app.get('/:code', async (req, res) => {
+  try {
+    const { code } = req.params;
+    
+    const url = await Url.findOne({ shortCode: code });
+    
+    if (!url) {
+      return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+    }
+    
+    // Increment click count
+    url.clicks += 1;
+    await url.save();
+    
+    res.redirect(url.originalUrl);
+  } catch (error) {
+    console.error('Error redirecting:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Stats endpoint
+app.get('/api/stats/:code', async (req, res) => {
+  try {
+    const { code } = req.params;
+    
+    const url = await Url.findOne({ shortCode: code });
+    
+    if (!url) {
+      return res.status(404).json({ error: 'URL not found' });
+    }
+    
+    res.json({
+      originalUrl: url.originalUrl,
+      shortCode: url.shortCode,
+      createdAt: url.createdAt,
+      clicks: url.clicks
+    });
+  } catch (error) {
+    console.error('Error getting stats:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+// Legacy server for backward compatibility
+const legacyApp = express();
+const legacyPort = process.env.LEGACY_PORT || 3001;
+
+legacyApp.set('trust proxy', 1);
+legacyApp.use(express.json());
+legacyApp.use(express.static(path.join(__dirname, 'public')));
+
+legacyApp.listen(legacyPort, () => {
+  console.log(`Legacy server listening on port ${legacyPort}`);
 });
