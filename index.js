@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use(express.static(path.join(__dirname, 'public')));
-nunjucks.configure('views', { autoescape: true, express: app });
+nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true, express: app });
 app.set('view engine', 'njk');
 
 async function connectToDatabase() {
@@ -22,12 +22,12 @@ connectToDatabase().catch(err => console.error('MongoDB error:', err));
 const Url = require('./models/Url');
 
 app.get('/', (req, res) => {
-  res.render('index'); // Render index.njk
+  res.render('index');
 });
 
 app.post('/shorten', async (req, res) => {
   await connectToDatabase();
-  const { url, alias } = req.body; // Ensure form sends 'alias'
+  const { url, alias } = req.body;
   if (!url) return res.render('index', { error: 'URL required' });
 
   let shortCode = alias || shortid.generate();
@@ -38,8 +38,8 @@ app.post('/shorten', async (req, res) => {
 
   const urlDoc = new Url({ originalUrl: url, shortCode });
   await urlDoc.save();
-  const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`; // Force HTTPS
-  res.render('index', { shortUrl }); // Render, don’t send JSON
+  const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
+  res.render('index', { shortUrl });
 });
 
 app.get('/:code', async (req, res) => {
