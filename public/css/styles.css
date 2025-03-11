@@ -1,4 +1,4 @@
-/* Reset defaults */
+/* Replace public/css/styles.css */
 * {
   margin: 0;
   padding: 0;
@@ -6,8 +6,8 @@
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f7fa;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f8f8; /* Light gray like naturl.link */
   color: #333;
   line-height: 1.6;
   min-height: 100vh;
@@ -16,25 +16,32 @@ body {
   align-items: center;
 }
 
-/* Container for centering */
 .container {
   max-width: 600px;
   width: 90%;
   padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Header */
-h1 {
   text-align: center;
-  font-size: 2.5rem;
-  color: #1a73e8;
-  margin-bottom: 20px;
 }
 
-/* Form styling */
+h1 {
+  font-size: 2.5rem;
+  color: #00c4cc; /* Soft teal from naturl.link */
+  margin-bottom: 10px;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #666;
+  margin: 15px 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -45,137 +52,80 @@ input[type="url"],
 input[type="text"] {
   padding: 12px;
   font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  border-radius: 25px; /* Rounded like naturl.link */
   outline: none;
-  transition: border-color 0.3s;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input[type="url"]:focus,
 input[type="text"]:focus {
-  border-color: #1a73e8;
+  border-color: #00c4cc;
+  box-shadow: 0 2px 8px rgba(0, 196, 204, 0.2);
 }
 
 button {
-  padding: 12px;
+  padding: 12px 20px;
   font-size: 1rem;
-  background-color: #1a73e8;
+  font-weight: 600;
+  background-color: #00c4cc;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-  background-color: #1557b0;
-}
-
-/* Error and success messages */
-p {
-  text-align: center;
-  margin-top: 15px;
+  background-color: #00a0a8;
+  transform: translateY(-2px);
 }
 
 p[style="color: red;"] {
-  color: #d93025;
-  font-weight: bold;
+  color: #e63946;
+  font-weight: 600;
+  margin-top: 10px;
 }
 
-p a {
-  color: #1a73e8;
+.results {
+  margin-top: 20px;
+}
+
+.results p {
+  margin: 10px 0;
+}
+
+.results a {
+  color: #00c4cc;
   text-decoration: none;
 }
 
-p a:hover {
+.results a:hover {
   text-decoration: underline;
 }
 
-/* Responsive design */
-@media (max-width: 480px) {
-  h1 {
-    font-size: 2rem;
-  }
-
-  input[type="url"],
-  input[type="text"],
-  button {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
-}
-
-/* Add to the end of styles.css */
 .qr-code {
   max-width: 200px;
   width: 100%;
   margin: 15px auto;
   display: block;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-/* Add to public/css/styles.css */
-.results {
-  text-align: center;
-}
-
-.share-buttons {
-  margin: 15px 0;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.share-buttons button {
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  background-color: #555;
-  color: #fff;
+  border: 1px solid #e0e0e0;
   border-radius: 5px;
 }
 
-.share-buttons button:hover {
-  background-color: #333;
-}
-
-button[onclick="copyLink()"] {
-  background-color: #28a745;
-  margin: 10px 0;
-}
-
-button[onclick="copyLink()"]:hover {
-  background-color: #218838;
-}
-
-.back-button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #6c757d;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-top: 15px;
-}
-
-.back-button:hover {
-  background-color: #5a6268;
-}
-
-
-
-/* Add to public/css/styles.css */
 .share-container {
   position: relative;
   margin: 15px 0;
 }
 
 .share-button {
-  background-color: #555;
+  background-color: #00c4cc;
 }
 
 .share-button:hover {
-  background-color: #333;
+  background-color: #00a0a8;
 }
 
 .share-dropdown {
@@ -196,64 +146,49 @@ button[onclick="copyLink()"]:hover {
   width: 100%;
   padding: 8px 12px;
   margin: 5px 0;
-  background-color: #555;
-  color: #fff;
-  border: none;
+  background-color: #00c4cc;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .share-dropdown button:hover {
-  background-color: #333;
-}
-/* Add to public/css/styles.css */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
+  background-color: #00a0a8;
 }
 
-th, td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+button[onclick="copyLink()"] {
+  background-color: #00c4cc;
 }
 
-th {
-  background-color: #f4f7fa;
-  font-weight: bold;
+button[onclick="copyLink()"]:hover {
+  background-color: #00a0a8;
 }
 
-td a {
-  color: #1a73e8;
+button[onclick="downloadQR()"] {
+  background-color: #666;
+  margin: 10px 0;
+}
+
+button[onclick="downloadQR()"]:hover {
+  background-color: #4d4d4d;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #666;
+  color: #fff;
   text-decoration: none;
+  border-radius: 25px;
+  margin-top: 15px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-td a:hover {
-  text-decoration: underline;
-}
-/* Add to public/css/styles.css */
-/* Replace or update in public/css/styles.css */
-.tagline {
-  text-align: center;
-  font-size: 1.4rem;
-  font-weight: bold;
-  background: linear-gradient(45deg, #1a73e8, #34c759); /* Blue to green gradient */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin: 15px 0;
-  animation: fadeIn 1s ease-in-out;
+.back-button:hover {
+  background-color: #4d4d4d;
+  transform: translateY(-2px);
 }
 
-@keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(-10px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-.stats {
-  text-align: center;
-  font-size: 1rem;
-  color: #777;
-  margin-bottom: 20px;
+@media (max-width: 480px) {
+  h1 { font-size: 2rem; }
+  .tagline { font-size: 1rem; }
+  input, button { font-size: 0.9rem; padding: 10px; }
 }
