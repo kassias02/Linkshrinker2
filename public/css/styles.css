@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 800px; /* Widened from 600px */
   width: 90%;
   padding: 20px;
   text-align: center;
@@ -130,13 +130,15 @@ p[style="color: red;"] {
   color: #00c4cc;
   text-decoration: none;
   font-size: 1rem;
+  flex-grow: 1; /* Takes available space */
 }
 
 .link-box a:hover {
   text-decoration: underline;
 }
 
-.copy-btn {
+.copy-btn,
+.share-button {
   padding: 8px 15px;
   font-size: 0.9rem;
   background-color: #00c4cc;
@@ -146,14 +148,6 @@ p[style="color: red;"] {
 .share-container {
   position: relative;
   display: inline-block;
-}
-
-.share-button {
-  background-color: #00c4cc;
-}
-
-.share-button:hover {
-  background-color: #00a0a8;
 }
 
 .share-dropdown {
@@ -211,18 +205,27 @@ p[style="color: red;"] {
   display: inline-block;
   padding: 12px 24px;
   margin: 15px 0;
-  background: #fff; /* White like naturl.link */
-  color: #000; /* Black text */
+  background: #fff;
+  color: #000;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   border-radius: 25px;
-  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 0 10px rgba(0, 196, 204, 0.5); /* Teal glow */
+  animation: pulse 2s infinite; /* Pulse animation */
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 .support-button:hover {
-  background: #00c4cc; /* Teal on hover */
+  background: #00c4cc;
   color: #fff;
+  box-shadow: 0 0 20px rgba(0, 196, 204, 0.8); /* Brighter glow */
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 .back-button {
