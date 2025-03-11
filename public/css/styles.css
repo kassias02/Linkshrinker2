@@ -233,11 +233,22 @@ td a:hover {
   text-decoration: underline;
 }
 /* Add to public/css/styles.css */
+/* Replace or update in public/css/styles.css */
 .tagline {
   text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-  margin: 10px 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+  background: linear-gradient(45deg, #1a73e8, #34c759); /* Blue to green gradient */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 15px 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .stats {
