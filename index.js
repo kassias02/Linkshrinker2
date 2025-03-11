@@ -47,6 +47,7 @@ app.post('/shorten', async (req, res) => {
 app.get('/:code', async (req, res) => {
   await connectToDatabase();
   const url = await Url.findOne({ shortCode: req.params.code });
+  const totalLinks = await Url.countDocuments(); // Add total links count
   if (!url) return res.sendFile(path.join(__dirname, 'views', 'error.html'));
   url.clicks += 1;
   await url.save();

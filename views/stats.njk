@@ -7,24 +7,29 @@
 <body>
   <div class="container">
     <h1>LinkShrinker Stats</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Short URL</th>
-          <th>Original URL</th>
-          <th>Clicks</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for url in urls %}
+    <p>Total Links Shortened: {{ totalLinks }}</p>
+    {% if urls.length %}
+      <table>
+        <thead>
           <tr>
-            <td><a href="https://linkshrinker2.vercel.app/{{ url.shortCode }}">https://linkshrinker2.vercel.app/{{ url.shortCode }}</a></td>
-            <td>{{ url.originalUrl }}</td>
-            <td>{{ url.clicks }}</td>
+            <th>Short URL</th>
+            <th>Original URL</th>
+            <th>Clicks</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for url in urls %}
+            <tr>
+              <td><a href="https://linkshrinker2.vercel.app/{{ url.shortCode }}">https://linkshrinker2.vercel.app/{{ url.shortCode }}</a></td>
+              <td>{{ url.originalUrl }}</td>
+              <td>{{ url.clicks }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No links have been shortened yet.</p>
+    {% endif %}
     <a href="/" class="back-button">Back to Shrink</a>
   </div>
 </body>
