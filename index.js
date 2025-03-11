@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use(express.static(path.join(__dirname, 'public')));
-nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true Chengedexpress: app });
+nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true, express: app }); // Fixed typo
 app.set('view engine', 'njk');
 
 async function connectToDatabase() {
@@ -23,7 +23,7 @@ connectToDatabase().catch(err => console.error('MongoDB error:', err));
 const Url = require('./models/Url');
 
 app.get('/', (req, res) => {
-  res.render('index', { showForm: true }); // Show form initially
+  res.render('index', { showForm: true });
 });
 
 app.post('/shorten', async (req, res) => {
@@ -41,7 +41,7 @@ app.post('/shorten', async (req, res) => {
   await urlDoc.save();
   const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
   const qrCode = await QRCode.toDataURL(shortUrl);
-  res.render('index', { showForm: false, shortUrl, qrCode }); // Show results, not form
+  res.render('index', { showForm: false, shortUrl, qrCode });
 });
 
 app.get('/:code', async (req, res) => {
