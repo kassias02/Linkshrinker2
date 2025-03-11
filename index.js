@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use(express.static(path.join(__dirname, 'public')));
-nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true, express: app }); // Fixed typo
+nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true, express: app });
 app.set('view engine', 'njk');
 
 async function connectToDatabase() {
@@ -41,7 +41,7 @@ app.post('/shorten', async (req, res) => {
   await urlDoc.save();
   const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
   const qrCode = await QRCode.toDataURL(shortUrl);
-  res.render('index', { showForm: false, shortUrl, qrCode });
+  res.render('index', { showForm: false, shortUrl, qrCode, clicks: urlDoc.clicks });
 });
 
 app.get('/:code', async (req, res) => {
@@ -51,6 +51,12 @@ app.get('/:code', async (req, res) => {
   url.clicks += 1;
   await url.save();
   res.redirect(url.originalUrl);
+});
+
+app.get('/stats', async (req, res) => {
+  await connectToDatabase();
+  const urls = await Url.find().sort({ clicks: -1 });
+  res.render('stats', { urls });
 });
 
 app.get('/debug/urls', async (req, res) => {

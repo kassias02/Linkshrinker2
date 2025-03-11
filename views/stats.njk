@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LinkShrinker Stats</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>LinkShrinker Stats</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Short URL</th>
+          <th>Original URL</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for url in urls %}
+          <tr>
+            <td><a href="https://linkshrinker2.vercel.app/{{ url.shortCode }}">https://linkshrinker2.vercel.app/{{ url.shortCode }}</a></td>
+            <td>{{ url.originalUrl }}</td>
+            <td>{{ url.clicks }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="/" class="back-button">Back to Shrink</a>
+  </div>
+</body>
+</html>

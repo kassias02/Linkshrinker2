@@ -161,3 +161,74 @@ button[onclick="copyLink()"]:hover {
 .back-button:hover {
   background-color: #5a6268;
 }
+
+
+
+/* Add to public/css/styles.css */
+.share-container {
+  position: relative;
+  margin: 15px 0;
+}
+
+.share-button {
+  background-color: #555;
+}
+
+.share-button:hover {
+  background-color: #333;
+}
+
+.share-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 10;
+}
+
+.share-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  margin: 5px 0;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.share-dropdown button:hover {
+  background-color: #333;
+}
+/* Add to public/css/styles.css */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f7fa;
+  font-weight: bold;
+}
+
+td a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}

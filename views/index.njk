@@ -22,12 +22,15 @@
         <p>Shortened URL: <a href="{{ shortUrl }}" id="shortUrl">{{ shortUrl }}</a></p>
         <img src="{{ qrCode }}" alt="QR Code" class="qr-code">
 
-        <!-- Share Buttons -->
-        <div class="share-buttons">
-          <button onclick="share('twitter')">Share on Twitter</button>
-          <button onclick="share('facebook')">Share on Facebook</button>
-          <button onclick="share('whatsapp')">Share on WhatsApp</button>
-          <button onclick="share('linkedin')">Share on LinkedIn</button>
+        <!-- Share Dropdown -->
+        <div class="share-container">
+          <button class="share-button" onclick="toggleDropdown()">Share</button>
+          <div class="share-dropdown" id="shareDropdown">
+            <button onclick="share('twitter')">Twitter</button>
+            <button onclick="share('facebook')">Facebook</button>
+            <button onclick="share('whatsapp')">WhatsApp</button>
+            <button onclick="share('linkedin')">LinkedIn</button>
+          </div>
         </div>
 
         <!-- Copy Button -->
@@ -40,6 +43,11 @@
   </div>
 
   <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById('shareDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
     function share(platform) {
       const url = document.getElementById('shortUrl').href;
       const encodedUrl = encodeURIComponent(url);
@@ -60,6 +68,7 @@
           break;
       }
       window.open(shareUrl, '_blank', 'width=600,height=400');
+      toggleDropdown(); // Close dropdown after selection
     }
 
     function copyLink() {
