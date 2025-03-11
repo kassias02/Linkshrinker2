@@ -22,8 +22,11 @@ connectToDatabase().catch(err => console.error('MongoDB error:', err));
 
 const Url = require('./models/Url');
 
-app.get('/', (req, res) => {
-  res.render('index', { showForm: true });
+app.get('/', async (req, res) => {
+  await connectToDatabase();
+  const totalLinks = await Url.countDocuments();
+  const totalClicks = (await Url.aggregate([{ $group: { _id: null, total: { $sum: '$clicks' } } }])[0] || { total: 0 }).total;
+  res.render('index', { showForm: true, totalLinks, totalClicks });
 });
 
 app.post('/shorten', async (req, res) => {
@@ -41,13 +44,15 @@ app.post('/shorten', async (req, res) => {
   await urlDoc.save();
   const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
   const qrCode = await QRCode.toDataURL(shortUrl);
-  res.render('index', { showForm: false, shortUrl, qrCode, clicks: urlDoc.clicks });
+  const totalLinks = await Url.countDocuments();
+  const totalClicks = (await Url.aggregate([{ $group: { _id: null, total: { $sum: '$clicks' } } }])[0] || { total: 0 }).total;
+  res.render('index', { showForm: false, shortUrl, qrCode, clicks: urlDoc.clicks, totalLinks, totalClicks });
 });
 
+// Rest of the routes (unchanged: /:code, /stats, /debug/urls)
 app.get('/:code', async (req, res) => {
   await connectToDatabase();
   const url = await Url.findOne({ shortCode: req.params.code });
-  const totalLinks = await Url.countDocuments(); // Add total links count
   if (!url) return res.sendFile(path.join(__dirname, 'views', 'error.html'));
   url.clicks += 1;
   await url.save();
@@ -57,7 +62,8 @@ app.get('/:code', async (req, res) => {
 app.get('/stats', async (req, res) => {
   await connectToDatabase();
   const urls = await Url.find().sort({ clicks: -1 });
-  res.render('stats', { urls });
+  const totalLinks = await Url.countDocuments();
+  res.render('stats', { urls, totalLinks });
 });
 
 app.get('/debug/urls', async (req, res) => {

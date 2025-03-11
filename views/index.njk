@@ -7,6 +7,8 @@
 <body>
   <div class="container">
     <h1>LinkShrinker</h1>
+    <p class="tagline">Shorten Your Links Instantly – No Signup, 100% Free!</p>
+    <p class="stats">Total Links Shortened: {{ totalLinks }} | Total Clicks: {{ totalClicks }}</p>
 
     {% if showForm %}
       <form method="POST" action="/shorten">
@@ -20,9 +22,8 @@
     {% else %}
       <div class="results">
         <p>Shortened URL: <a href="{{ shortUrl }}" id="shortUrl">{{ shortUrl }}</a></p>
+        <p>Clicks: {{ clicks }}</p>
         <img src="{{ qrCode }}" alt="QR Code" class="qr-code">
-
-        <!-- Share Dropdown -->
         <div class="share-container">
           <button class="share-button" onclick="toggleDropdown()">Share</button>
           <div class="share-dropdown" id="shareDropdown">
@@ -32,11 +33,7 @@
             <button onclick="share('linkedin')">LinkedIn</button>
           </div>
         </div>
-
-        <!-- Copy Button -->
         <button onclick="copyLink()">Copy Link</button>
-
-        <!-- Back Button -->
         <a href="/" class="back-button">Shrink Another Link</a>
       </div>
     {% endif %}
@@ -52,32 +49,19 @@
       const url = document.getElementById('shortUrl').href;
       const encodedUrl = encodeURIComponent(url);
       let shareUrl;
-
       switch (platform) {
-        case 'twitter':
-          shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Check%20out%20this%20shortened%20link!`;
-          break;
-        case 'facebook':
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-          break;
-        case 'whatsapp':
-          shareUrl = `https://api.whatsapp.com/send?text=${encodedUrl}`;
-          break;
-        case 'linkedin':
-          shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`;
-          break;
+        case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Check%20out%20this%20shortened%20link!`; break;
+        case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`; break;
+        case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${encodedUrl}`; break;
+        case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`; break;
       }
       window.open(shareUrl, '_blank', 'width=600,height=400');
-      toggleDropdown(); // Close dropdown after selection
+      toggleDropdown();
     }
 
     function copyLink() {
       const url = document.getElementById('shortUrl').href;
-      navigator.clipboard.writeText(url).then(() => {
-        alert('Link copied to clipboard!');
-      }).catch(err => {
-        console.error('Copy failed:', err);
-      });
+      navigator.clipboard.writeText(url).then(() => alert('Link copied to clipboard!')).catch(err => console.error('Copy failed:', err));
     }
   </script>
 </body>

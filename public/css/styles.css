@@ -232,3 +232,17 @@ td a {
 td a:hover {
   text-decoration: underline;
 }
+/* Add to public/css/styles.css */
+.tagline {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin: 10px 0;
+}
+
+.stats {
+  text-align: center;
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 20px;
+}
