@@ -7,20 +7,69 @@
 <body>
   <div class="container">
     <h1>LinkShrinker</h1>
-    <form method="POST" action="/shorten">
-      <input type="url" name="url" placeholder="Enter URL" required>
-      <input type="text" name="alias" placeholder="Custom Alias (optional)">
-      <button type="submit">Shrink</button>
-    </form>
 
-    {% if error %}
-      <p style="color: red;">{{ error }}</p>
-    {% endif %}
+    {% if showForm %}
+      <form method="POST" action="/shorten">
+        <input type="url" name="url" placeholder="Enter URL" required>
+        <input type="text" name="alias" placeholder="Custom Alias (optional)">
+        <button type="submit">Shrink</button>
+      </form>
+      {% if error %}
+        <p style="color: red;">{{ error }}</p>
+      {% endif %}
+    {% else %}
+      <div class="results">
+        <p>Shortened URL: <a href="{{ shortUrl }}" id="shortUrl">{{ shortUrl }}</a></p>
+        <img src="{{ qrCode }}" alt="QR Code" class="qr-code">
 
-    {% if shortUrl %}
-      <p>Shortened URL: <a href="{{ shortUrl }}">{{ shortUrl }}</a></p>
-      <img src="{{ qrCode }}" alt="QR Code" class="qr-code">
+        <!-- Share Buttons -->
+        <div class="share-buttons">
+          <button onclick="share('twitter')">Share on Twitter</button>
+          <button onclick="share('facebook')">Share on Facebook</button>
+          <button onclick="share('whatsapp')">Share on WhatsApp</button>
+          <button onclick="share('linkedin')">Share on LinkedIn</button>
+        </div>
+
+        <!-- Copy Button -->
+        <button onclick="copyLink()">Copy Link</button>
+
+        <!-- Back Button -->
+        <a href="/" class="back-button">Shrink Another Link</a>
+      </div>
     {% endif %}
   </div>
+
+  <script>
+    function share(platform) {
+      const url = document.getElementById('shortUrl').href;
+      const encodedUrl = encodeURIComponent(url);
+      let shareUrl;
+
+      switch (platform) {
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Check%20out%20this%20shortened%20link!`;
+          break;
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+          break;
+        case 'whatsapp':
+          shareUrl = `https://api.whatsapp.com/send?text=${encodedUrl}`;
+          break;
+        case 'linkedin':
+          shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`;
+          break;
+      }
+      window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+
+    function copyLink() {
+      const url = document.getElementById('shortUrl').href;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(err => {
+        console.error('Copy failed:', err);
+      });
+    }
+  </script>
 </body>
 </html>

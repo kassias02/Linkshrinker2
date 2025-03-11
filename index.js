@@ -10,8 +10,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use(express.static(path.join(__dirname, 'public')));
-nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true, express: app });
-app.set('view engine', 'njk'); // Fixed typo: 'view engine', not 'view_engine'
+nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true Chengedexpress: app });
+app.set('view engine', 'njk');
 
 async function connectToDatabase() {
   if (mongoose.connection.readyState === 1) return;
@@ -23,25 +23,25 @@ connectToDatabase().catch(err => console.error('MongoDB error:', err));
 const Url = require('./models/Url');
 
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', { showForm: true }); // Show form initially
 });
 
 app.post('/shorten', async (req, res) => {
   await connectToDatabase();
   const { url, alias } = req.body;
-  if (!url) return res.render('index', { error: 'URL required' });
+  if (!url) return res.render('index', { showForm: true, error: 'URL required' });
 
   let shortCode = alias || shortid.generate();
   if (alias) {
     const existing = await Url.findOne({ shortCode: alias });
-    if (existing) return res.render('index', { error: 'Alias already in use' });
+    if (existing) return res.render('index', { showForm: true, error: 'Alias already in use' });
   }
 
   const urlDoc = new Url({ originalUrl: url, shortCode });
   await urlDoc.save();
   const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
   const qrCode = await QRCode.toDataURL(shortUrl);
-  res.render('index', { shortUrl, qrCode });
+  res.render('index', { showForm: false, shortUrl, qrCode }); // Show results, not form
 });
 
 app.get('/:code', async (req, res) => {
