@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const shortid = require('shortid');
 const nunjucks = require('nunjucks');
+const QRCode = require('qrcode'); // Add this
 const path = require('path');
 const app = express();
 
@@ -10,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use(express.static(path.join(__dirname, 'public')));
 nunjucks.configure(path.join(__dirname, 'views'), { autoescape: true, express: app });
-app.set('view engine', 'njk');
+app.set('view_engine', 'njk');
 
 async function connectToDatabase() {
   if (mongoose.connection.readyState === 1) return;
@@ -39,7 +40,8 @@ app.post('/shorten', async (req, res) => {
   const urlDoc = new Url({ originalUrl: url, shortCode });
   await urlDoc.save();
   const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
-  res.render('index', { shortUrl });
+  const qrCode = await QRCode.toDataURL(shortUrl); // Generate QR code
+  res.render('index', { shortUrl, qrCode }); // Pass qrCode to template
 });
 
 app.get('/:code', async (req, res) => {

@@ -19,6 +19,7 @@
 
     {% if shortUrl %}
       <p>Shortened URL: <a href="{{ shortUrl }}">{{ shortUrl }}</a></p>
+      <img src="{{ qrCode }}" alt="QR Code" class="qr-code">
     {% endif %}
   </div>
 </body>

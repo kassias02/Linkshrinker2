@@ -104,3 +104,16 @@ p a:hover {
     padding: 10px;
   }
 }
+
+
+
+
+/* Add to the end of styles.css */
+.qr-code {
+  max-width: 200px;
+  width: 100%;
+  margin: 15px auto;
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
