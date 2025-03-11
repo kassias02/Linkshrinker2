@@ -23,7 +23,7 @@ connectToDatabase().catch(err => console.error('MongoDB error:', err));
 const Url = require('./models/Url');
 
 app.get('/', (req, res) => {
-  res.render('index', { showForm: true }); // No stats here
+  res.render('index', { showForm: true });
 });
 
 app.post('/shorten', async (req, res) => {
