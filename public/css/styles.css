@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-  max-width: 800px; /* Widened from 600px */
+  max-width: 800px;
   width: 90%;
   padding: 20px;
   text-align: center;
@@ -130,7 +130,7 @@ p[style="color: red;"] {
   color: #00c4cc;
   text-decoration: none;
   font-size: 1rem;
-  flex-grow: 1; /* Takes available space */
+  flex-grow: 1;
 }
 
 .link-box a:hover {
@@ -147,15 +147,13 @@ p[style="color: red;"] {
 
 .share-container {
   position: relative;
-  display: inline-block;
 }
 
 .share-dropdown {
   display: none;
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0; /* Align left to avoid overflow */
   background-color: #222;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
@@ -211,15 +209,15 @@ p[style="color: red;"] {
   font-weight: 600;
   text-decoration: none;
   border-radius: 25px;
-  box-shadow: 0 0 10px rgba(0, 196, 204, 0.5); /* Teal glow */
-  animation: pulse 2s infinite; /* Pulse animation */
+  box-shadow: 0 0 10px rgba(0, 196, 204, 0.5);
+  animation: pulse 2s infinite;
   transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 .support-button:hover {
   background: #00c4cc;
   color: #fff;
-  box-shadow: 0 0 20px rgba(0, 196, 204, 0.8); /* Brighter glow */
+  box-shadow: 0 0 20px rgba(0, 196, 204, 0.8);
 }
 
 @keyframes pulse {

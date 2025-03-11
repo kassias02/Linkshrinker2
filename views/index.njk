@@ -8,10 +8,10 @@
 <body>
   <div class="container">
     <h1>LinkShrinker</h1>
-    <p class="tagline">Shorten Your Links Instantly – No Signup, 100% Free!</p>
-    <p class="qr-info">Generate short URLs and QR codes for easy sharing.</p>
 
     {% if showForm %}
+      <p class="tagline">Shorten Your Links Instantly – No Signup, 100% Free!</p>
+      <p class="qr-info">Generate short URLs and QR codes for easy sharing.</p>
       <form method="POST" action="/shorten">
         <input type="url" name="url" placeholder="Enter URL" required>
         <input type="text" name="alias" placeholder="Custom Alias (optional)">
@@ -27,13 +27,15 @@
           <div class="link-box">
             <a href="{{ shortUrl }}" id="shortUrl">{{ shortUrl }}</a>
             <button onclick="copyLink()" class="copy-btn">Copy Link</button>
-            <button class="share-button" onclick="toggleDropdown()">Share</button>
-            <div class="share-dropdown" id="shareDropdown">
-              <button onclick="share('twitter')">Twitter</button>
-              <button onclick="share('facebook')">Facebook</button>
-              <button onclick="share('whatsapp')">WhatsApp</button>
-              <button onclick="share('linkedin')">LinkedIn</button>
-              <button onclick="share('email')">Email</button>
+            <div class="share-container">
+              <button class="share-button" onclick="toggleDropdown()">Share</button>
+              <div class="share-dropdown" id="shareDropdown">
+                <button onclick="share('twitter')">Twitter</button>
+                <button onclick="share('facebook')">Facebook</button>
+                <button onclick="share('whatsapp')">WhatsApp</button>
+                <button onclick="share('linkedin')">LinkedIn</button>
+                <button onclick="share('email')">Email</button>
+              </div>
             </div>
           </div>
         </div>
