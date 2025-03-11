@@ -1,36 +1,106 @@
+/* Reset defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 0;
-    background-color: #f4f4f4;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Container for centering */
+.container {
+  max-width: 600px;
+  width: 90%;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
 h1 {
-    color: #333;
+  text-align: center;
+  font-size: 2.5rem;
+  color: #1a73e8;
+  margin-bottom: 20px;
 }
 
+/* Form styling */
 form {
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-input[type="url"], input[type="text"] {
-    padding: 10px;
-    width: 300px;
-    margin-right: 10px;
+input[type="url"],
+input[type="text"] {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="url"]:focus,
+input[type="text"]:focus {
+  border-color: #1a73e8;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #1557b0;
 }
 
+/* Error and success messages */
 p {
-    color: red;
+  text-align: center;
+  margin-top: 15px;
+}
+
+p[style="color: red;"] {
+  color: #d93025;
+  font-weight: bold;
+}
+
+p a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  input[type="url"],
+  input[type="text"],
+  button {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
 }
