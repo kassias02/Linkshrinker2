@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #000; /* Black background */
-  color: #fff; /* White text */
+  background-color: #000;
+  color: #fff;
   line-height: 1.6;
   min-height: 100vh;
   display: flex;
@@ -24,21 +24,21 @@ body {
 
 h1 {
   font-size: 2.5rem;
-  color: #00c4cc; /* Teal title */
+  color: #00c4cc;
   margin-bottom: 10px;
 }
 
 .tagline {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #fff; /* White tagline */
+  color: #fff;
   margin: 15px 0;
   animation: fadeIn 1s ease-in-out;
 }
 
 .qr-info {
   font-size: 1rem;
-  color: #ccc; /* Light gray for info */
+  color: #ccc;
   margin-bottom: 20px;
 }
 
@@ -57,11 +57,11 @@ input[type="url"],
 input[type="text"] {
   padding: 12px;
   font-size: 1rem;
-  border: 1px solid #333; /* Dark border */
+  border: 1px solid #333;
   border-radius: 25px;
   outline: none;
-  background-color: #222; /* Dark input background */
-  color: #fff; /* White text */
+  background-color: #222;
+  color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -76,7 +76,7 @@ button {
   padding: 12px 20px;
   font-size: 1rem;
   font-weight: 600;
-  background-color: #00c4cc; /* Teal button */
+  background-color: #00c4cc;
   color: #fff;
   border: none;
   border-radius: 25px;
@@ -85,12 +85,12 @@ button {
 }
 
 button:hover {
-  background-color: #00a0a8; /* Darker teal on hover */
+  background-color: #00a0a8;
   transform: translateY(-2px);
 }
 
 p[style="color: red;"] {
-  color: #e63946; /* Red error */
+  color: #e63946;
   font-weight: 600;
   margin-top: 10px;
 }
@@ -100,34 +100,52 @@ p[style="color: red;"] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
-.results p {
-  margin: 5px 0;
+.link-section {
+  width: 100%;
 }
 
-.results a {
-  color: #00c4cc; /* Teal link */
+.link-label {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.link-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #222;
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: 1px solid #333;
+  margin-bottom: 10px;
+}
+
+.link-box a {
+  color: #00c4cc;
   text-decoration: none;
+  font-size: 1rem;
 }
 
-.results a:hover {
+.link-box a:hover {
   text-decoration: underline;
 }
 
-.qr-code {
-  max-width: 200px;
-  width: 100%;
-  margin: 15px auto;
-  display: block;
-  border: 1px solid #333;
-  border-radius: 5px;
-  background: #fff; /* White QR background */
+.copy-btn {
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  background-color: #00c4cc;
+  border-radius: 20px;
 }
 
 .share-container {
   position: relative;
+  display: inline-block;
 }
 
 .share-button {
@@ -144,7 +162,7 @@ p[style="color: red;"] {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #222; /* Dark dropdown */
+  background-color: #222;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   padding: 10px;
@@ -164,20 +182,53 @@ p[style="color: red;"] {
   background-color: #00a0a8;
 }
 
-button[onclick="copyLink()"],
-button[onclick="downloadQR()"] {
-  background-color: #00c4cc;
+.qr-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-button[onclick="copyLink()"]:hover,
-button[onclick="downloadQR()"]:hover {
-  background-color: #00a0a8;
+.qr-code {
+  max-width: 150px;
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.qr-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qr-buttons button {
+  padding: 10px 15px;
+  font-size: 0.9rem;
+}
+
+.support-button {
+  display: inline-block;
+  padding: 12px 24px;
+  margin: 15px 0;
+  background: #fff; /* White like naturl.link */
+  color: #000; /* Black text */
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 25px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.support-button:hover {
+  background: #00c4cc; /* Teal on hover */
+  color: #fff;
 }
 
 .back-button {
   display: inline-block;
   padding: 12px 20px;
-  background-color: #666; /* Gray back button */
+  background-color: #666;
   color: #fff;
   text-decoration: none;
   border-radius: 25px;
@@ -193,5 +244,8 @@ button[onclick="downloadQR()"]:hover {
   h1 { font-size: 2rem; }
   .tagline { font-size: 1rem; }
   .qr-info { font-size: 0.9rem; }
+  .link-label { font-size: 1.2rem; }
+  .link-box { flex-direction: column; align-items: stretch; }
+  .qr-section { flex-direction: column; }
   input, button { font-size: 0.9rem; padding: 10px; }
 }

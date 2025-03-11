@@ -41,7 +41,7 @@ app.post('/shorten', async (req, res) => {
   await urlDoc.save();
   const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`;
   const qrCode = await QRCode.toDataURL(shortUrl);
-  res.render('index', { showForm: false, shortUrl, qrCode, clicks: urlDoc.clicks });
+  res.render('index', { showForm: false, shortUrl, qrCode });
 });
 
 app.get('/:code', async (req, res) => {

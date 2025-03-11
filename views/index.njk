@@ -22,10 +22,12 @@
       {% endif %}
     {% else %}
       <div class="results">
-        <p>Shortened URL: <a href="{{ shortUrl }}" id="shortUrl">{{ shortUrl }}</a></p>
-        <p>Clicks: {{ clicks }}</p>
-        <img src="{{ qrCode }}" alt="QR Code" class="qr-code" id="qrCodeImg">
-        <div class="share-container">
+        <div class="link-section">
+          <span class="link-label">YOUR SHORT LINK</span>
+          <div class="link-box">
+            <a href="{{ shortUrl }}" id="shortUrl">{{ shortUrl }}</a>
+            <button onclick="copyLink()" class="copy-btn">Copy Link</button>
+          </div>
           <button class="share-button" onclick="toggleDropdown()">Share</button>
           <div class="share-dropdown" id="shareDropdown">
             <button onclick="share('twitter')">Twitter</button>
@@ -35,8 +37,16 @@
             <button onclick="share('email')">Email</button>
           </div>
         </div>
-        <button onclick="downloadQR()">Download QR Code</button>
-        <button onclick="copyLink()">Copy Link</button>
+
+        <div class="qr-section">
+          <img src="{{ qrCode }}" alt="QR Code" class="qr-code" id="qrCodeImg">
+          <div class="qr-buttons">
+            <button onclick="downloadQR()">Download QR Code</button>
+            <button onclick="shareQR()">Share QR Code</button>
+          </div>
+        </div>
+
+        <a href="#" class="support-button">Support This Project</a>
         <a href="/" class="back-button">Shrink Another Link</a>
       </div>
     {% endif %}
@@ -53,7 +63,7 @@
       const encodedUrl = encodeURIComponent(url);
       let shareUrl;
       switch (platform) {
-        case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Check%20out%20this%20shortened%20link!`; break;
+        case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Check%20out%20this%20short%20link!`; break;
         case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`; break;
         case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${encodedUrl}`; break;
         case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`; break;
@@ -77,6 +87,24 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+    function shareQR() {
+      const qrImage = document.getElementById('qrCodeImg').src;
+      fetch(qrImage)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], 'LinkShrinker_QR.png', { type: 'image/png' });
+          if (navigator.share) {
+            navigator.share({
+              files: [file],
+              title: 'LinkShrinker QR Code',
+              text: 'Check out this QR code for a shortened link!'
+            }).catch(err => console.error('Share failed:', err));
+          } else {
+            alert('Web Share API not supported. Download and share manually.');
+          }
+        });
     }
   </script>
 </body>
