@@ -1,18 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const shortid = require('shortid');
+const nunjucks = require('nunjucks');
 const path = require('path');
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.get('/favicon.ico', (req, res) => res.status(204).end()); // Before static
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'views')));
+nunjucks.configure('views', { autoescape: true, express: app });
+app.set('view engine', 'njk');
 
 async function connectToDatabase() {
   if (mongoose.connection.readyState === 1) return;
-  await mongoose.connect(process.env.MONGODB_URI); // No deprecated options
+  await mongoose.connect(process.env.MONGODB_URI);
   console.log('Connected to MongoDB');
 }
 connectToDatabase().catch(err => console.error('MongoDB error:', err));
@@ -20,23 +22,30 @@ connectToDatabase().catch(err => console.error('MongoDB error:', err));
 const Url = require('./models/Url');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.render('index'); // Render index.njk
 });
 
 app.post('/shorten', async (req, res) => {
   await connectToDatabase();
-  const { url } = req.body;
-  if (!url) return res.status(400).json({ error: 'URL required' });
-  const urlDoc = new Url({ originalUrl: url, shortCode: shortid.generate() });
+  const { url, alias } = req.body; // Ensure form sends 'alias'
+  if (!url) return res.render('index', { error: 'URL required' });
+
+  let shortCode = alias || shortid.generate();
+  if (alias) {
+    const existing = await Url.findOne({ shortCode: alias });
+    if (existing) return res.render('index', { error: 'Alias already in use' });
+  }
+
+  const urlDoc = new Url({ originalUrl: url, shortCode });
   await urlDoc.save();
-  const shortUrl = `${req.protocol}://${req.get('host')}/${urlDoc.shortCode}`;
-  res.json({ originalUrl: url, shortUrl });
+  const shortUrl = `https://linkshrinker2.vercel.app/${urlDoc.shortCode}`; // Force HTTPS
+  res.render('index', { shortUrl }); // Render, don’t send JSON
 });
 
 app.get('/:code', async (req, res) => {
   await connectToDatabase();
   const url = await Url.findOne({ shortCode: req.params.code });
-  if (!url) return res.status(404).sendFile(path.join(__dirname, 'views', 'error.html'));
+  if (!url) return res.sendFile(path.join(__dirname, 'views', 'error.html'));
   url.clicks += 1;
   await url.save();
   res.redirect(url.originalUrl);
